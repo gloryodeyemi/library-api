@@ -1,6 +1,7 @@
 package com.example.library.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,9 +22,11 @@ public class Book {
 
     @ManyToMany
     @JoinTable(name = "book_author")
+    @JsonIgnoreProperties({"id", "books","dateCreated", "dateUpdated"})
     private Set<Author> author;
 
     @ManyToOne
+    @JsonIgnoreProperties({"id", "dateCreated", "dateUpdated"})
     private Publisher publisher;
     private String year;
 

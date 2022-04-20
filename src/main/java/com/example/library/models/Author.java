@@ -1,6 +1,7 @@
 package com.example.library.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,7 +20,9 @@ public class Author {
 
     private String firstName;
     private String lastName;
+
     @ManyToMany(mappedBy = "author")
+    @JsonIgnore
     private Set<Book> books;
 
     @CreationTimestamp
