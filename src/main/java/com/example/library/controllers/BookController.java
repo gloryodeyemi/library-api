@@ -2,9 +2,7 @@ package com.example.library.controllers;
 
 import com.example.library.dtos.BookDto;
 import com.example.library.exceptions.ErrorException;
-import com.example.library.models.Author;
 import com.example.library.models.Book;
-import com.example.library.models.Publisher;
 import com.example.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
