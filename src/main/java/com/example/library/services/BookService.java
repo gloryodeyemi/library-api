@@ -11,10 +11,7 @@ import com.example.library.repositories.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class BookService {
@@ -36,7 +33,7 @@ public class BookService {
         book.setTitle(bookDto.getTitle());
         book.setYear(bookDto.getYear());
         // attach author(s) to book
-        Set<Author> authorSet = new HashSet<>();
+        List<Author> authorSet = new ArrayList<>();
         for (Long id: bookDto.getAuthorIds()){
             Author author = authorValidation(id);
             authorSet.add(author);
@@ -56,12 +53,12 @@ public class BookService {
         return bookRepository.findById(bookId).orElse(null);
     }
 
-    public Set<Book> findByAuthor(Long authorId) throws ErrorException{
-        return bookRepository.findByAuthor(authorValidation(authorId).getId());
+    public List<Book> findByAuthor(Long authorId) throws ErrorException{
+        return bookRepository.findByAuthor(authorValidation(authorId));
     }
 
-    public Set<Book> findByPublisher(Long publisherId) throws ErrorException{
-        return bookRepository.findByPublisher(publisherValidation(publisherId).getId());
+    public List<Book> findByPublisher(Long publisherId) throws ErrorException{
+        return bookRepository.findByPublisher(publisherValidation(publisherId));
     }
 
     public Author authorValidation(Long authorId) throws ErrorException{

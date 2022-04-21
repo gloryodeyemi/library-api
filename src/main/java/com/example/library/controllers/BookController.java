@@ -33,12 +33,12 @@ public class BookController {
     }
 
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<Set<Book>> getAllBooksByAuthor(@PathVariable Long authorId) throws ErrorException{
+    public ResponseEntity<List<Book>> getAllBooksByAuthor(@PathVariable Long authorId) throws ErrorException{
         return ResponseEntity.ok(bookService.findByAuthor(authorId));
     }
 
     @GetMapping("/publisher/{publisherId}")
-    public ResponseEntity<Set<Book>> getAllBooksByPublisher(@PathVariable Long publisherId) throws ErrorException{
+    public ResponseEntity<List<Book>> getAllBooksByPublisher(@PathVariable Long publisherId) throws ErrorException{
         return ResponseEntity.ok(bookService.findByPublisher(publisherId));
     }
 }
