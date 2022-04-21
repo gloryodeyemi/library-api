@@ -1,5 +1,6 @@
 package com.example.library.controllers;
 
+import com.example.library.exceptions.ErrorException;
 import com.example.library.models.Publisher;
 import com.example.library.services.PublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ public class PublisherController {
     @Autowired
     PublisherService publisherService;
 
-    @PostMapping
-    public ResponseEntity<Publisher> addPublisher(@RequestBody Publisher object){
-        return ResponseEntity.ok(publisherService.save(object));
+    @PostMapping("/{userId}")
+    public ResponseEntity<Publisher> addPublisher(@RequestBody Publisher object, @PathVariable Long userId) throws ErrorException {
+        return ResponseEntity.ok(publisherService.save(object, userId));
     }
 
     @GetMapping("/{id}")

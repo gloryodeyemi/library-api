@@ -1,5 +1,6 @@
 package com.example.library.controllers;
 
+import com.example.library.exceptions.ErrorException;
 import com.example.library.models.Author;
 import com.example.library.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ public class AuthorController {
     @Autowired
     AuthorService authorService;
 
-    @PostMapping
-    public ResponseEntity<Author> addAuthor(@RequestBody Author object){
-        return ResponseEntity.ok(authorService.save(object));
+    @PostMapping("/{userId}")
+    public ResponseEntity<Author> addAuthor(@RequestBody Author object, @PathVariable Long userId) throws ErrorException {
+        return ResponseEntity.ok(authorService.save(object, userId));
     }
 
     @GetMapping("/{id}")

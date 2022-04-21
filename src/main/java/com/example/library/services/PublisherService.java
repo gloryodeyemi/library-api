@@ -1,5 +1,6 @@
 package com.example.library.services;
 
+import com.example.library.exceptions.ErrorException;
 import com.example.library.models.Publisher;
 import com.example.library.repositories.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ public class PublisherService {
     @Autowired
     PublisherRepository publisherRepository;
 
+    @Autowired
+    UserService userService;
+
     public List<Publisher> findAll() {
         return publisherRepository.findAll();
     }
@@ -20,7 +24,8 @@ public class PublisherService {
         return publisherRepository.findById(publisherId).orElse(null);
     }
 
-    public Publisher save(Publisher object) {
+    public Publisher save(Publisher object, Long userId) throws ErrorException {
+        userService.userValidation(userId);
         return publisherRepository.save(object);
     }
 }

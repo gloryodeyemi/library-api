@@ -27,7 +27,11 @@ public class BookService {
     @Autowired
     PublisherRepository publisherRepository;
 
-    public Book addBook(BookDto bookDto) throws ErrorException {
+    @Autowired
+    UserService userService;
+
+    public Book addBook(BookDto bookDto, Long userId) throws ErrorException {
+        userService.userValidation(userId);
         Book book = new Book();
         book.setTitle(bookDto.getTitle());
         book.setYear(bookDto.getYear());

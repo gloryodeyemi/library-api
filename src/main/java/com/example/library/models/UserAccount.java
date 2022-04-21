@@ -22,6 +22,9 @@ public class UserAccount {
     private String phoneNumber;
     private UserType userType;
     private String userCode;
+    private String address;
+    private String city;
+    private String country;
     private String password;
 
     @Override

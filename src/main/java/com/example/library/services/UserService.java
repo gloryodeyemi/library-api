@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -27,6 +28,7 @@ public class UserService {
         }
         UserAccount user = new UserAccount();
         BeanUtils.copyProperties(userDto, user);
+        userRepository.save(user);
         // encode the password
         String password = passwordEncoder.encode(userDto.getPassword());
         // check if password matches
@@ -48,5 +50,15 @@ public class UserService {
 
     public UserAccount findByUserCode(String userCode) {
         return userRepository.findUserAccountByUserCode(userCode);
+    }
+
+    public void userValidation(Long userId) throws ErrorException{
+        UserAccount userAccount = findById(userId);
+        if (userAccount == null) {
+            throw new ErrorException("Invalid user!");
+        }
+        if (userAccount.getUserType().name().equals("CUSTOMER")){
+            throw new ErrorException("Unauthorized!");
+        }
     }
 }

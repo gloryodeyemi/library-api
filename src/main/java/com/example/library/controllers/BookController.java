@@ -17,9 +17,9 @@ public class BookController {
     @Autowired
     BookService bookService;
 
-    @PostMapping
-    public ResponseEntity<Book> addBook(@RequestBody BookDto bookDto) throws ErrorException {
-        return ResponseEntity.ok(bookService.addBook(bookDto));
+    @PostMapping("/{userId}")
+    public ResponseEntity<Book> addBook(@RequestBody BookDto bookDto, @PathVariable Long userId) throws ErrorException {
+        return ResponseEntity.ok(bookService.addBook(bookDto, userId));
     }
 
     @GetMapping("/{id}")
