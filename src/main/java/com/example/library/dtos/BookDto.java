@@ -12,4 +12,7 @@ public class BookDto {
     private List<Long> authorIds;
     private Long publisherId;
     private String year;
+    private Long noOfCopies;
+    private Long noOfDaysToBeBorrowed;
+    private Double penaltyFee;
 }

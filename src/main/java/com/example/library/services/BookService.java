@@ -8,6 +8,7 @@ import com.example.library.models.Publisher;
 import com.example.library.repositories.AuthorRepository;
 import com.example.library.repositories.BookRepository;
 import com.example.library.repositories.PublisherRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,10 @@ public class BookService {
     public Book addBook(BookDto bookDto, Long userId) throws ErrorException {
         userService.userValidation(userId);
         Book book = new Book();
-        book.setTitle(bookDto.getTitle());
-        book.setYear(bookDto.getYear());
+        BeanUtils.copyProperties(bookDto, book);
+//        book.setTitle(bookDto.getTitle());
+//        book.setYear(bookDto.getYear());
+//        book.setNoOfCopies(bookDto.getNoOfCopies());
         // attach author(s) to book
         List<Author> authorSet = new ArrayList<>();
         for (Long id: bookDto.getAuthorIds()){
@@ -59,6 +62,26 @@ public class BookService {
 
     public List<Book> findByPublisher(Long publisherId) throws ErrorException{
         return bookRepository.findByPublisher(publisherValidation(publisherId));
+    }
+
+    public Book updateBook(BookDto bookDto, Long userId) throws ErrorException {
+        userService.userValidation(userId);
+        Book book = findById(bookDto.getId());
+        BeanUtils.copyProperties(bookDto, book);
+//        book.setTitle(bookDto.getTitle());
+//        book.setYear(bookDto.getYear());
+//        book.setNoOfCopies(bookDto.getNoOfCopies());
+        // attach author(s) to book
+        List<Author> authorList = new ArrayList<>();
+        for (Long id: bookDto.getAuthorIds()){
+            Author author = authorValidation(id);
+            authorList.add(author);
+        }
+        book.setAuthor(authorList);
+        // attach publisher to book
+        Publisher publisher = publisherValidation(bookDto.getPublisherId());
+        book.setPublisher(publisher);
+        return bookRepository.save(book);
     }
 
     public Author authorValidation(Long authorId) throws ErrorException{

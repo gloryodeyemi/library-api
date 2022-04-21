@@ -37,6 +37,9 @@ public class Book {
     @JsonIgnoreProperties({"id", "dateCreated", "dateUpdated"})
     private Publisher publisher;
     private String year;
+    private Long noOfCopies;
+    private Long noOfDaysToBeBorrowed;
+    private Double penaltyFee;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

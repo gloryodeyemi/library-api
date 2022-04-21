@@ -22,6 +22,11 @@ public class BookController {
         return ResponseEntity.ok(bookService.addBook(bookDto, userId));
     }
 
+    @PatchMapping("/update/{userId}")
+    public ResponseEntity<Book> updateBook(@RequestBody BookDto bookDto, @PathVariable Long userId) throws ErrorException {
+        return ResponseEntity.ok(bookService.updateBook(bookDto, userId));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.findById(id));
