@@ -38,6 +38,7 @@ public class Book {
     private Publisher publisher;
     private String year;
     private Long noOfCopies;
+    private Long noOfCopiesBorrowed = 0L;
     private Long noOfDaysToBeBorrowed;
     private Double penaltyFee;
 

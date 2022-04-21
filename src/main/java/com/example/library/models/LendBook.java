@@ -32,13 +32,15 @@ public class LendBook {
     private LocalDateTime returnDate;
 
     private ReturnStatus returnStatus;
+//    @JsonIgnore
     private String currency;
-    private Double penaltyFee = 0D;
-    private String fee;
+    @JsonIgnore
+    private Double fee = 0D;
+    private String penaltyFee;
 
     @Override
     public final String toString(){
-        return this.currency + " " + this.penaltyFee;
+        return this.currency + " " + this.fee;
     }
 
     @CreationTimestamp
