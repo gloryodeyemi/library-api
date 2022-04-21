@@ -1,8 +1,10 @@
 package com.example.library.services;
 
+import com.example.library.dtos.ReturnDto;
 import com.example.library.exceptions.ErrorException;
 import com.example.library.models.*;
 import com.example.library.repositories.BookRepository;
+import com.example.library.repositories.ExchangeRateRepository;
 import com.example.library.repositories.LendBookRepository;
 import com.example.library.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class LendBookService {
 
     @Autowired
     BookRepository bookRepository;
+
+    @Autowired
+    ExchangeRateRepository exchangeRateRepository;
 
     public List<LendBook> findAll() {
         return lendBookRepository.findAll();
@@ -61,8 +66,41 @@ public class LendBookService {
         return lendBookRepository.save(object);
     }
 
-    public LendBook returnBook(Long lendBookId){
-        LendBook lendBook = findById(lendBookId);
-        return null;
+    public LendBook returnBook(ReturnDto returnDto) throws ErrorException{
+        UserAccount userAccount = userRepository.findById(returnDto.getUserId()).orElse(null);
+        if (userAccount == null) {
+            throw new ErrorException("Invalid user!");
+        }
+        if (userAccount.getUserType().name().equals("STAFF")){
+            throw new ErrorException("Unauthorized!");
+        }
+        LendBook lendBook = findById(returnDto.getLendBookId());
+        if (lendBook == null) {
+            throw new ErrorException("Not found");
+        }
+        if (lendBook.getReturnStatus().equals(ReturnStatus.RETURNED)){
+            throw new ErrorException("Invalid operation - the book has been returned");
+        }
+        Book book = bookRepository.getById(lendBook.getBookId());
+        if (!returnDto.getUserId().equals(lendBook.getUserId())){
+            throw new ErrorException("Unauthorized!");
+        }
+        LocalDateTime returnDate =  LocalDateTime.now();
+        lendBook.setReturnDate(returnDate);
+        Long daysDiff = ChronoUnit.DAYS.between(lendBook.getExpectedReturnDate().toLocalDate(), returnDate.toLocalDate());
+        System.out.println("Days difference = " + daysDiff);
+        if (daysDiff > 0){
+            ExchangeRate rate = exchangeRateRepository.findByCurrency(lendBook.getCurrency());
+            Double fee = book.getPenaltyFee() * daysDiff * rate.getRate();
+            lendBook.setFee(fee);
+            lendBookRepository.save(lendBook);
+            lendBook.setPenaltyFee(lendBook.toString());
+            lendBookRepository.save(lendBook);
+        }
+        book.setNoOfCopies(book.getNoOfCopies() + lendBook.getNoOfCopies());
+        book.setNoOfCopiesBorrowed(book.getNoOfCopiesBorrowed() - lendBook.getNoOfCopies());
+        bookRepository.save(book);
+        lendBook.setReturnStatus(ReturnStatus.RETURNED);
+        return lendBookRepository.save(lendBook);
     }
 }
